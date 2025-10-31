@@ -8,7 +8,7 @@ void main()
 {
     float value1,value2;
     char operant;
-    float result;
+    double result;
 
 
     printf("Enter Value 1 and 2(Second Value can be zero for square,square root and reciprocal):- \n");
