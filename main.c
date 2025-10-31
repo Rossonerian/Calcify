@@ -11,19 +11,39 @@ void main()
     float result;
 
 
-    printf("Enter Value 1 and 2:- ");
+    printf("Enter Value 1 and 2(Second Value can be zero for square,square root and reciprocal):- \n");
     scanf("%f",&value1);
     scanf("%f",&value2);
+    printf("Enter Operant(+,-,*,/,^(square),?(square root),~(reciprocal)):- ")
     scanf("%c",&operant);
 
     switch (operant)
     {
     case '+':
-        /* code */
+        result = add(value1,value2);
         break;
-    
+    case '-':
+        result = sub(value1,value2);
+        break;
+    case '*':
+        result = mul(value1,value2);
+        break;
+    case '/':
+        result = div(value1,value2);
+        break;
+    case '^':
+        result = sqr(value1);
+        break;
+    case '?':
+        result = sqroot(value1);
+        break;
+    case '~':
+        result = inv(value1);
+        break;
     default:
         break;
     }
+
+    printf("Result = %f",result);
 
 }
