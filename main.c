@@ -51,15 +51,5 @@ void main()
         printf("Do you wish to continue(Y/N):- \n");
         scanf(" %c",&opt);
 
-        while ((opt-32) == 'Y' || opt == 'Y' )
-        {
-            value2=0;
-            printf("Enter Value:- \n");
-            scanf("%f",&value2);
-            printf("Enter Operant(+,-,*,/,^(square),?(square root),~(reciprocal)):- \n");
-            scanf(" %c",&operant);
-
-            value1 = result;
-            goto calc;
-        }
+        
 }
