@@ -14,7 +14,7 @@ void main()
     printf("Enter Value 1 and 2(Second Value can be zero for square,square root and reciprocal):- \n");
     scanf("%f",&value1);
     scanf("%f",&value2);
-    printf("Enter Operant(+,-,*,/,^(square),?(square root),~(reciprocal)):- ")
+    printf("Enter Operant(+,-,*,/,^(square),?(square root),~(reciprocal)):- ");
     scanf("%c",&operant);
 
     switch (operant)
