@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "Calc.c"
 //For Initial Purpose,We are taking type of operation and values separately (May Change Later)
 
 
@@ -17,4 +17,5 @@ void main()
     scanf("Operator:- %c");
 
     
+
 }
