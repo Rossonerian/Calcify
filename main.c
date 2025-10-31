@@ -12,10 +12,18 @@ void main()
 
 
     printf("Enter Value 1 and 2:- ");
-    scanf("Value 1 :- %f",value1);
-    scanf("Value 2 :- %f",value2);
-    scanf("Operator:- %c");
+    scanf("%f",&value1);
+    scanf("%f",&value2);
+    scanf("%c",&operant);
 
+    switch (operant)
+    {
+    case '+':
+        /* code */
+        break;
     
+    default:
+        break;
+    }
 
 }
