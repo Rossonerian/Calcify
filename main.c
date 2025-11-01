@@ -1,44 +1,66 @@
 #include <stdio.h>
-#include "Calc.c"
 #include <stdlib.h>
+#include <ctype.h>
+#include "Calc.h"
 
-//For Initial Purpose,We are taking type of operation and values separately (May Change Later)
+int ctr = 0;
 
-extern int ctr = 0;
-extern int i = 1;
+typedef struct {
+    double a;
+    double b;
+    double result;
+    char op;
+} OpEntry;
 
+void memory(char fr, double x, double y, double z, char o) {
+    static OpEntry *history = NULL;
+    static size_t capacity = 0;
 
-void mem(int ctr,char *free,double x,double y,double z,char *o){
-    char operators{} = calloc(sizeof(char),3);
-    double mem{} = calloc(sizeof(double),1);
+    /* main() increments ctr before calling memory(), so current entry index is ctr-1 */
+    size_t index = (ctr > 0) ? (size_t)(ctr - 1) : 0;
 
+    if (fr == 'Y' || fr == 'y') {
+        /* ensure capacity for index */
+        if (index + 1 > capacity) {
+            size_t newcap = (capacity == 0) ? 4 : capacity * 2;
+            while (newcap < index + 1) newcap *= 2;
+            OpEntry *tmp = realloc(history, newcap * sizeof(*history));
+            if (!tmp) {
+                /* allocation failed: keep old history and bail */
+                return;
+            }
+            history = tmp; 
+            capacity = newcap;
+        }
 
-    if ((opt-32) != 'Y' || opt != 'Y'){
-        // for(int j = 0; j <(sizeof(mem)/sizeof(mem[0])); ++j){
-        //     for(int k = j+1; k < (j+2);++k){
-        //         printf("%lf",operators[j]);
-        //         printf("%c%lf=%lf;\t",mem[j],operators[])
-        //     }
-        // }
-        continue;
-    }
-    else if ((sizeof(mem)/sizeof(mem[0])) < ctr){
-        realloc(operators,ctr*2);
-    }
-    else{
-        mem[i] = o;
-        if (i =< 3){
-            do{
-                operators[i] = (i%3==0) ? z : (i%2==0) ? y : x;
-                ++i;
+        /* store entry at 0-based index */
+        history[index].a = x;
+        history[index].b = y;
+        history[index].result = z;
+        history[index].op = o;
+    } else {
+        /* print current operation */
+        printf("%lf %c %lf = %lf;\n", x, o, y, z);
+
+        /* print stored history (if any) */
+        if (ctr > 0 && history != NULL) {
+            for (size_t i = 0; i < (size_t)(ctr-1); ++i) {
+                printf("%lf %c %lf = %lf;\n",
+                    history[i].a,
+                    history[i].op,
+                    history[i].b,
+                    history[i].result);
             }
         }
+
+        /* free history */
+        free(history);
+        history = NULL;
+        capacity = 0;
     }
 }
-
-
-
-void main()
+// ...existing code...
+int main()
 {
     double value1,value2;
     char operant;
@@ -46,12 +68,12 @@ void main()
     char opt;
 
 
-    printf("Enter Value 1 and 2(Second Value can be zero for square,square root and reciprocal):- \n");
-    scanf("%lf %lf",&value1,&value2);
-    printf("Enter Operant(+,-,*,/,^(square),?(square root),~(reciprocal)):- \n");
-    scanf(" %c",&operant);
+    printf("Enter Value 1 and 2 (Second Value can be zero for square, square root and reciprocal):\n");
+    if (scanf("%lf %lf", &value1, &value2) != 2) return 1;
+    printf("Enter Operant (+,-,*,/,^(square),?(square root),~(reciprocal)):\n");
+    if (scanf(" %c", &operant) != 1) return 1;
 
-    calc:
+    for (;;) {
         switch (operant)
         {
         case '+':
@@ -64,7 +86,7 @@ void main()
             result = mul(value1,value2);
             break;
         case '/':
-            result = div(value1,value2);
+            result = division(value1,value2);
             break;
         case '^':
             result = sqr(value1);
@@ -76,24 +98,29 @@ void main()
             result = inv(value1);
             break;
         default:
-            break;
+            printf("Unknown operator '%c'\n", operant);
+            return 1;
         }
-        printf("Result = %lf\n",result);
+
+        printf("Result = %lf\n", result);
         ++ctr;
 
-        printf("Do you wish to continue(Y/N):- \n");
-        scanf(" %c",&opt);
-        mem();
+        printf("Do you wish to continue (Y/N):\n");
+        if (scanf(" %c", &opt) != 1) return 1;
+        memory(opt, value1, value2, result, operant);
 
-        while ((opt-32) == 'Y' || opt == 'Y')
-        {
-            value2=0;
-            printf("Enter Value:- \n");
-            scanf("%lf",&value2);
-            printf("Enter Operant(+,-,*,/,^(square),?(square root),~(reciprocal)):- \n");
-            scanf(" %c",&operant);
-
+        if (opt == 'Y' || opt == 'y') {
             value1 = result;
-            goto calc;
+            value2 = 0;
+            printf("Enter Value:\n");
+            if (scanf("%lf", &value2) != 1) return 1;
+            printf("Enter Operant (+,-,*,/,^(square),?(square root),~(reciprocal)):\n");
+            if (scanf(" %c", &operant) != 1) return 1;
+            continue;
         }
+
+        break;
+    }
+
+    return 0;
 }

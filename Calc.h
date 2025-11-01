@@ -14,7 +14,7 @@ extern float mul(float a,float b)
 {
     return (a*b);
 }
-extern float div(float a,float b)
+extern float division(float a,float b)
 {
     return (a/b);
 }
